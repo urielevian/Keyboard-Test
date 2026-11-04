@@ -19,6 +19,6 @@ def guessing_game():
                 print("Correct! You guessed the number.")
                 break
         except ValueError:
-            print("Please enter a focking whole number.")
+            print("Please enter a focking nice whole number.")
 
 guessing_game();
