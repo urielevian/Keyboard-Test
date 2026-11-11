@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>בדיקת תקינות מקלדת</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, "Segoe UI", Arial, sans-serif;
+      background: #0b1220;
+      color: #e8eef8;
+      font-synthesis: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px;
+      background:
+        radial-gradient(ellipse at 50% 0%, #172844 0, transparent 55%),
+        #0b1220;
+    }
+
+    main {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+    }
+
+    .intro {
+      margin: 0;
+      color: #a9b8ce;
+      line-height: 1.7;
+    }
+
+    .status-panel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 28px;
+      margin: 24px auto;
+      padding: 16px 20px;
+      border: 1px solid #263752;
+      border-radius: 14px;
+      background: #111c2e;
+      color: #c6d2e3;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-value {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin: 0 0 16px;
+      color: #b7c4d6;
+      font-size: 0.9rem;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      background: #2fbf83;
+    }
+
+    .legend-swatch.released {
+      background: #4a8dff;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      padding: 18px;
+      border: 1px solid #2a3a53;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #17243a, #101a2b);
+      box-shadow: 0 22px 60px #0005;
+      direction: ltr;
+    }
+
+    .main-keys {
+      display: grid;
+      align-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .key-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      min-width: max-content;
+    }
+
+    .function-row {
+      margin-bottom: 7px;
+    }
+
+    .key {
+      display: flex;
+      flex: 1 1 0;
+      min-width: 42px;
+      height: 54px;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border: 1px solid #455772;
+      border-bottom-width: 4px;
+      border-radius: 8px;
+      background: #25354d;
+      color: #f2f6fc;
+      font-size: 0.88rem;
+      font-weight: 650;
+      text-align: center;
+      transition: background-color 100ms ease, border-color 100ms ease, transform 100ms ease;
+      user-select: none;
+    }
+
+    .key.small {
+      height: 38px;
+      min-width: 36px;
+      font-size: 0.76rem;
+    }
+
+    .key.wide-1 {
+      flex-grow: 1.5;
+    }
+
+    .key.wide-2 {
+      flex-grow: 2;
+    }
+
+    .key.wide-3 {
+      flex-grow: 2.6;
+    }
+
+    .key.space {
+      flex-grow: 6;
+    }
+
+    .key.active {
+      transform: translateY(2px);
+      border-color: #64e6b0;
+      border-bottom-width: 2px;
+      background: #16835c;
+      color: #fff;
+    }
+
+    .key.released {
+      border-color: #8db9ff;
+      background: #315f9e;
+      color: #fff;
+    }
+
+    .reset-button {
+      align-self: center;
+      padding: 9px 14px;
+      border: 1px solid #536985;
+      border-radius: 9px;
+      background: #25354d;
+      color: #f2f6fc;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .reset-button:hover {
+      background: #314765;
+    }
+
+    .reset-button:focus-visible {
+      outline: 3px solid #8db9ff;
+      outline-offset: 3px;
+    }
+
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(42px, 1fr));
+      gap: 6px;
+      align-content: end;
+      min-width: 190px;
+    }
+
+    .numpad .key {
+      min-width: 0;
+    }
+
+    .numpad .tall {
+      grid-row: span 2;
+      height: auto;
+    }
+
+    .footer-note {
+      margin: 18px 0 0;
+      color: #8496af;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding: 28px 12px;
+      }
+
+      .keyboard {
+        overflow-x: auto;
+        grid-template-columns: minmax(760px, 1fr) auto;
+        padding: 12px;
+      }
+
+      .key-row {
+        gap: 4px;
+      }
+
+      .key {
+        min-width: 38px;
+        height: 48px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>בדיקת תקינות מקלדת</h1>
+      <p class="intro">לחצו על המקשים במקלדת הפיזית. מקש לחוץ יסומן בירוק, ולאחר השחרור יישאר מסומן בכחול עד לאיפוס.</p>
+    </header>
+
+    <section class="status-panel" aria-live="polite" aria-atomic="true">
+      <div class="status-item">מצב: <span class="status-value" id="status">ממתין ללחיצה</span></div>
+      <div class="status-item">מקשים לחוצים: <span class="status-value" id="held-count">0</span></div>
+      <div class="status-item">מקשים שנבדקו: <span class="status-value" id="tested-count">0</span></div>
+      <div class="status-item">מקש אחרון: <span class="status-value" id="last-key">—</span></div>
+      <button class="reset-button" id="reset-button" type="button">איפוס בדיקה</button>
+    </section>
+
+    <div class="legend" aria-hidden="true">
+      <span class="legend-item"><span class="legend-swatch"></span>לחוץ עכשיו</span>
+      <span class="legend-item"><span class="legend-swatch released"></span>נבדק ושוחרר</span>
+    </div>
+
+    <section class="keyboard" aria-label="תצוגת מקלדת">
+      <div class="main-keys" id="main-keys"></div>
+      <div class="numpad" id="numpad"></div>
+    </section>
+
+    <p class="footer-note">אם מקש נשאר ירוק אחרי ששחררתם אותו, ייתכן שהוא נתקע. הסימונים הכחולים נשמרים עד שלוחצים על ״איפוס בדיקה״.</p>
+  </main>
+
+  <script>
+    const mainRows = [
+      { small: true, className: "function-row", keys: [
+        ["Escape", "Esc"], ["F1", "F1"], ["F2", "F2"], ["F3", "F3"], ["F4", "F4"],
+        ["F5", "F5"], ["F6", "F6"], ["F7", "F7"], ["F8", "F8"], ["F9", "F9"],
+        ["F10", "F10"], ["F11", "F11"], ["F12", "F12"], ["PrintScreen", "PrtSc"],
+        ["ScrollLock", "ScrLk"], ["Pause", "Pause"]
+      ]},
+      { keys: [
+        ["Backquote", "`"], ["Digit1", "1"], ["Digit2", "2"], ["Digit3", "3"], ["Digit4", "4"],
+        ["Digit5", "5"], ["Digit6", "6"], ["Digit7", "7"], ["Digit8", "8"], ["Digit9", "9"],
+        ["Digit0", "0"], ["Minus", "-"], ["Equal", "="], ["Backspace", "Backspace", "wide-2"]
+      ]},
+      { keys: [
+        ["Tab", "Tab", "wide-1"], ["KeyQ", "Q"], ["KeyW", "W"], ["KeyE", "E"], ["KeyR", "R"],
+        ["KeyT", "T"], ["KeyY", "Y"], ["KeyU", "U"], ["KeyI", "I"], ["KeyO", "O"],
+        ["KeyP", "P"], ["BracketLeft", "["], ["BracketRight", "]"], ["Backslash", "\\", "wide-1"]
+      ]},
+      { keys: [
+        ["CapsLock", "Caps Lock", "wide-2"], ["KeyA", "A"], ["KeyS", "S"], ["KeyD", "D"],
+        ["KeyF", "F"], ["KeyG", "G"], ["KeyH", "H"], ["KeyJ", "J"], ["KeyK", "K"],
+        ["KeyL", "L"], ["Semicolon", ";"], ["Quote", "'"], ["Enter", "Enter", "wide-2"]
+      ]},
+      { keys: [
+        ["ShiftLeft", "Shift", "wide-3"], ["KeyZ", "Z"], ["KeyX", "X"], ["KeyC", "C"],
+        ["KeyV", "V"], ["KeyB", "B"], ["KeyN", "N"], ["KeyM", "M"], ["Comma", ","],
+        ["Period", "."], ["Slash", "/"], ["ShiftRight", "Shift", "wide-3"]
+      ]},
+      { keys: [
+        ["ControlLeft", "Ctrl", "wide-1"], ["MetaLeft", "Win"], ["AltLeft", "Alt", "wide-1"],
+        ["Space", "Space", "space"], ["AltRight", "Alt", "wide-1"], ["MetaRight", "Win"],
+        ["ContextMenu", "Menu"], ["ControlRight", "Ctrl", "wide-1"]
+      ]}
+    ];
+
+    const numpadKeys = [
+      ["NumLock", "Num"], ["NumpadDivide", "/"], ["NumpadMultiply", "*"], ["NumpadSubtract", "-"],
+      ["Numpad7", "7"], ["Numpad8", "8"], ["Numpad9", "9"], ["NumpadAdd", "+", "tall"],
+      ["Numpad4", "4"], ["Numpad5", "5"], ["Numpad6", "6"],
+      ["Numpad1", "1"], ["Numpad2", "2"], ["Numpad3", "3"], ["NumpadEnter", "Enter", "tall"],
+      ["Numpad0", "0"], ["NumpadDecimal", "."]
+    ];
+
+    const keyElements = new Map();
+    const heldKeys = new Set();
+    const testedKeys = new Set();
+    const status = document.getElementById("status");
+    const heldCount = document.getElementById("held-count");
+    const testedCount = document.getElementById("tested-count");
+    const lastKey = document.getElementById("last-key");
+
+    function createKey(code, label, extraClass, small) {
+      const key = document.createElement("div");
+      key.className = `key${small ? " small" : ""}${extraClass ? ` ${extraClass}` : ""}`;
+      key.dataset.code = code;
+      key.textContent = label;
+      key.setAttribute("aria-hidden", "true");
+      keyElements.set(code, key);
+      return key;
+    }
+
+    for (const row of mainRows) {
+      const rowElement = document.createElement("div");
+      rowElement.className = `key-row${row.className ? ` ${row.className}` : ""}`;
+      for (const [code, label, extraClass] of row.keys) {
+        rowElement.append(createKey(code, label, extraClass, row.small));
+      }
+      document.getElementById("main-keys").append(rowElement);
+    }
+
+    for (const [code, label, extraClass] of numpadKeys) {
+      document.getElementById("numpad").append(createKey(code, label, extraClass, false));
+    }
+
+    function updateHeldCount() {
+      heldCount.textContent = String(heldKeys.size);
+    }
+
+    function updateTestedCount() {
+      testedCount.textContent = String(testedKeys.size);
+    }
+
+    function clearHeldKeys() {
+      for (const code of heldKeys) {
+        keyElements.get(code)?.classList.remove("active");
+      }
+      heldKeys.clear();
+      updateHeldCount();
+      if (testedKeys.size) {
+        status.textContent = "הסימונים נשמרו";
+      }
+    }
+
+    function resetTest() {
+      clearHeldKeys();
+      testedKeys.clear();
+      for (const key of keyElements.values()) {
+        key.classList.remove("released", "active");
+      }
+      updateTestedCount();
+      lastKey.textContent = "—";
+      status.textContent = "ממתין ללחיצה";
+    }
+
+    window.addEventListener("keydown", (event) => {
+      const key = keyElements.get(event.code);
+      if (!key || event.target.closest("button")) return;
+
+      if (event.code === "Space" || event.code.startsWith("Arrow")) {
+        event.preventDefault();
+      }
+
+      key.classList.remove("released");
+      key.classList.add("active");
+      heldKeys.add(event.code);
+      updateHeldCount();
+      status.textContent = "מקש לחוץ";
+      lastKey.textContent = key.textContent;
+    });
+
+    window.addEventListener("keyup", (event) => {
+      const key = keyElements.get(event.code);
+      if (!key || !heldKeys.delete(event.code)) return;
+
+      key.classList.remove("active");
+      key.classList.add("released");
+      testedKeys.add(event.code);
+      updateHeldCount();
+      updateTestedCount();
+      status.textContent = heldKeys.size ? "יש מקשים לחוצים" : "המקש נבדק ושוחרר";
+    });
+
+    window.addEventListener("blur", clearHeldKeys);
+    document.getElementById("reset-button").addEventListener("click", resetTest);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) clearHeldKeys();
+    });
+  </script>
+</body>
+</html>
