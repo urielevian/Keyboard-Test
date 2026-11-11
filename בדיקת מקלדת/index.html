@@ -204,7 +204,7 @@
           <p class="count" id="count">נבדקו 0 מתוך 0 מקשים</p>
         </div>
         <div style="display: flex; gap: 10px;">
-          <button class="reset" id="disable-keys" type="button">מבטל מקשים</button>
+          <button class="reset" id="disable-keys" type="button">מבטל מקשי פעולה</button>
           <button class="reset" id="reset" type="button">איפוס בדיקה</button>
         </div>
       </div>
@@ -322,18 +322,22 @@
     }
 
     document.addEventListener("keydown", (event) => {
-      if (keysDisabled) return;
       if (!keys.has(event.code)) return;
       markPressed(event.code);
-      if (!event.ctrlKey && !event.metaKey && !event.altKey &&
+      if (keysDisabled) {
+        event.preventDefault();
+      } else if (!event.ctrlKey && !event.metaKey && !event.altKey &&
           ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "PageUp", "PageDown"].includes(event.code)) {
         event.preventDefault();
       }
     });
 
     document.addEventListener("keyup", (event) => {
-      if (keysDisabled) return;
+      if (!keys.has(event.code)) return;
       markReleased(event.code);
+      if (keysDisabled) {
+        event.preventDefault();
+      }
     });
 
     window.addEventListener("blur", () => {
@@ -357,13 +361,13 @@
       keysDisabled = !keysDisabled;
       const button = document.getElementById("disable-keys");
       if (keysDisabled) {
-        button.textContent = "הפעל מקשים";
+        button.textContent = "הפעל מקשי פעולה";
         button.style.background = "#e74c3c";
-        status.textContent = "המקשים מבוטלים - אתה יכול לבדוק את המקלדת ללא הפרעות";
+        status.textContent = "מקשי הפעולה מבוטלים - אתה יכול לבדוק את המקלדת ללא הפרעות";
       } else {
-        button.textContent = "מבטל מקשים";
+        button.textContent = "מבטל מקשי פעולה";
         button.style.background = "#24334d";
-        status.textContent = "המקשים מופעלים";
+        status.textContent = "מקשי הפעולה מופעלים";
       }
     });
 
